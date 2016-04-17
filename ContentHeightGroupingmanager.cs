@@ -17,59 +17,9 @@ namespace EasyWaterfallStream
 
         }
 
-        //public WaterfallStreamViewer WaterfallStreamViewer
-        //{h
-        //    get { return (WaterfallStreamViewer)GetValue(WaterfallStreamViewerProperty); }
-        //    set { SetValue(WaterfallStreamViewerProperty, value); }
-        //}
-
-        //public static readonly DependencyProperty WaterfallStreamViewerProperty =
-        //    DependencyProperty.Register(nameof(WaterfallStreamViewer), typeof(WaterfallStreamViewer), typeof(ContentHeightGroupingManager), new PropertyMetadata(null,
-        //             (o, e) =>mei's
-        //             {
-        //                 var gm = o as ContentHeightGroupingManager;
-        //                 var count = (int)e.NewValue;
-        //                 var view = gm.CollectionView;
-        //                 InitCollectionViewGroup(view, count);
-        //             }));
 
 
 
-
-
-        public int GroupCount
-        {
-            get { return (int)GetValue(GroupCountProperty); }
-            set { SetValue(GroupCountProperty, value); }
-        }
-
-        public static readonly DependencyProperty GroupCountProperty =
-            DependencyProperty.Register(
-                nameof(GroupCount),
-                typeof(int),
-                typeof(ContentHeightGroupingManager),
-                new PropertyMetadata(3,
-                    (o, e) =>
-                    {
-                        var gm = o as ContentHeightGroupingManager;
-                        var count = (int)e.NewValue;
-                        var view = gm.CollectionView;
-                        InitCollectionViewGroup(view, count);
-                    }
-                ));
-
-        private static void InitCollectionViewGroup(DependencyCollectionView view, int count)
-        {
-            if (view.CollectionGroups?.Count != count)
-            {
-                view.CollectionGroups.Clear();
-                for (int i = 0; i < count; i++)
-                {
-                    var g = new DependencyCollectionViewGroup(i);
-                    view.CollectionGroups.Add(g);
-                }
-            }
-        }
 
 
         public static double GetContentHeight(DependencyObject obj)
@@ -83,7 +33,16 @@ namespace EasyWaterfallStream
         }
 
         public static readonly DependencyProperty ContentHeightProperty =
-            DependencyProperty.RegisterAttached(nameof(SetContentHeight).Remove(0, 3), typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d));
+            DependencyProperty.RegisterAttached(nameof(SetContentHeight).Remove(0, 3), typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d,
+                (o, e)=>
+                {
+                    var ctxDO = (o as FrameworkElement)?.DataContext as DependencyCollectionViewGroup ;
+                    if (ctxDO!=null)
+                    {
+                        ctxDO.SetValue(ContentHeightProperty,e.NewValue);
+                    }
+                }
+                ));
 
 
         public static double GetContentWidth(DependencyObject obj)
@@ -104,8 +63,9 @@ namespace EasyWaterfallStream
         {
             var min = CollectionView.CollectionGroups
                  .OfType<DependencyCollectionViewGroup>()
-                 .Select(x => new { x, value = (double)x.GetValue(ContentHeightProperty) })
-                 .Aggregate((x, y) => x.value > y.value ? y : x);
+                 .Select(x => new { x, h = (double)x.GetValue(ContentHeightProperty), count = x.GroupItems.Count })
+                   .OrderBy(x => x.h).ThenBy(x => x.count)
+                 .FirstOrDefault();
 
             min.x.GroupItems.Add(item);
             return true;

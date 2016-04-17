@@ -19,7 +19,19 @@ namespace EasyWaterfallStream
         public WaterfallStreamViewer()
         {
             this.DefaultStyleKey = typeof(WaterfallStreamViewer);
-            CollectionView = new DependencyCollectionView();
+            CollectionView = new DependencyCollectionView() { };
+            CollectionView.GroupingManager = new ContentHeightGroupingManager(this);
+   
+            var b = new Binding()
+            {
+                Source = this,
+                Path = new PropertyPath(nameof(Loader)),
+                Mode = BindingMode.TwoWay
+            };
+
+            BindingOperations.SetBinding(CollectionView, DependencyCollectionView.IncrementalLoaderProperty, b);
+
+            this.Loaded += (o, e) => { CollectionView.GroupingManager.GroupCount = 5; };
         }
 
         public DataTemplate WaterLineDataTemplate
@@ -55,14 +67,25 @@ namespace EasyWaterfallStream
 
 
 
-        public DependencyCollectionView CollectionView
+        internal DependencyCollectionView CollectionView
         {
             get { return (DependencyCollectionView)GetValue(CollectionViewProperty); }
-            private set { SetValue(CollectionViewProperty, value); }
+            set { SetValue(CollectionViewProperty, value); }
         }
 
-        public static readonly DependencyProperty CollectionViewProperty =
+        internal static readonly DependencyProperty CollectionViewProperty =
             DependencyProperty.Register(nameof(CollectionView), typeof(DependencyCollectionView), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
+
+
+        public DependencyCollectionViewIncrementalLoaderBase Loader
+        {
+            get { return (DependencyCollectionViewIncrementalLoaderBase)GetValue(LoaderProperty); }
+            set { SetValue(LoaderProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for Loader.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty LoaderProperty =
+            DependencyProperty.Register("Loader", typeof(DependencyCollectionViewIncrementalLoaderBase), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
 
 
 

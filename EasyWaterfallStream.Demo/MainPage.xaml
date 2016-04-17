@@ -10,7 +10,19 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <EasyWaterfallStream:WaterfallStreamViewer />
-
+        <EasyWaterfallStream:WaterfallStreamViewer Name="EasyWaterfallStream" BorderBrush="black" BorderThickness="2" Background="Gray" >
+            <EasyWaterfallStream:WaterfallStreamViewer.Loader>
+                <local:TestIntLoader/>
+            </EasyWaterfallStream:WaterfallStreamViewer.Loader>            
+        </EasyWaterfallStream:WaterfallStreamViewer>
+        <!--<ListView Background="Gray" xmlns:cv="using:MVVMSidekick.Collections" >
+            <ListView.ItemsSource>
+                <cv:DependencyCollectionView>
+                    <cv:DependencyCollectionView.IncrementalLoader>
+                        <local:TestIntLoader/>
+                    </cv:DependencyCollectionView.IncrementalLoader>
+                </cv:DependencyCollectionView>
+            </ListView.ItemsSource>
+        </ListView>-->
     </Grid>
 </Page>
