@@ -123,6 +123,7 @@
       <Link>CollectionView\DependencyObservableVector.cs</Link>
     </Compile>
     <Compile Include="ContentHeightGroupingManager.cs" />
+    <Compile Include="HeightConverter.cs" />
     <Compile Include="OrientationFlipConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WaterfallStreamViewer.cs" />

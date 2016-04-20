@@ -21,7 +21,7 @@ namespace EasyWaterfallStream
             this.DefaultStyleKey = typeof(WaterfallStreamViewer);
             CollectionView = new DependencyCollectionView() { };
             CollectionView.GroupingManager = new ContentHeightGroupingManager(this);
-   
+
             var b = new Binding()
             {
                 Source = this,
@@ -44,15 +44,7 @@ namespace EasyWaterfallStream
             DependencyProperty.Register(nameof(WaterLineDataTemplate), typeof(DataTemplate), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
 
 
-        public DataTemplate WaterfallItemTemplate
-        {
-            get { return (DataTemplate)GetValue(WaterfallItemTemplateProperty); }
-            set { SetValue(WaterfallItemTemplateProperty, value); }
-        }
-
-        public static readonly DependencyProperty WaterfallItemTemplateProperty =
-            DependencyProperty.Register(nameof(WaterfallItemTemplate), typeof(DataTemplate), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
-
+       
 
 
 
@@ -83,10 +75,49 @@ namespace EasyWaterfallStream
             set { SetValue(LoaderProperty, value); }
         }
 
-        // Using a DependencyProperty as the backing store for Loader.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty LoaderProperty =
-            DependencyProperty.Register("Loader", typeof(DependencyCollectionViewIncrementalLoaderBase), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
+            DependencyProperty.Register(nameof(Loader), typeof(DependencyCollectionViewIncrementalLoaderBase), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
 
+
+        public double VerticalOffset
+        {
+            get { return (double)GetValue(VerticalOffsetProperty); }
+            set { SetValue(VerticalOffsetProperty, value); }
+        }
+
+        public static readonly DependencyProperty VerticalOffsetProperty =
+            DependencyProperty.Register(nameof(VerticalOffset), typeof(double), typeof(WaterfallStreamViewer), new PropertyMetadata(0));
+
+
+        public double ScrollableHeight
+        {
+            get { return (double)GetValue(ScrollableHeightProperty); }
+            set { SetValue(ScrollableHeightProperty, value); }
+        }
+
+        public static readonly DependencyProperty ScrollableHeightProperty =
+            DependencyProperty.Register(nameof(ScrollableHeight), typeof(double), typeof(WaterfallStreamViewer), new PropertyMetadata(0));
+
+        public double HorizontalOffset
+        {
+            get { return (double)GetValue(HorizontalOffsetProperty); }
+            set { SetValue(HorizontalOffsetProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for HorizontalOffset.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty HorizontalOffsetProperty =
+            DependencyProperty.Register(nameof(HorizontalOffset), typeof(double), typeof(WaterfallStreamViewer), new PropertyMetadata(0));
+
+
+        public double ScrollableWidth
+        {
+            get { return (double)GetValue(ScrollableWidthProperty); }
+            set { SetValue(ScrollableWidthProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for ScrollableWidth.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty ScrollableWidthProperty =
+            DependencyProperty.Register("ScrollableWidth", typeof(double), typeof(WaterfallStreamViewer), new PropertyMetadata(0));
 
 
 

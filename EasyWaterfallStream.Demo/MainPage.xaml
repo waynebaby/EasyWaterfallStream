@@ -10,7 +10,8 @@
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-        <EasyWaterfallStream:WaterfallStreamViewer Name="EasyWaterfallStream" BorderBrush="black" BorderThickness="2" Background="Gray" >
+        <EasyWaterfallStream:WaterfallStreamViewer  Name="EasyWaterfallStream" BorderBrush="black" BorderThickness="2" Background="Gray" >
+         
             <EasyWaterfallStream:WaterfallStreamViewer.Loader>
                 <local:TestIntLoader/>
             </EasyWaterfallStream:WaterfallStreamViewer.Loader>            

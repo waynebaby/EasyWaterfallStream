@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 
 namespace EasyWaterfallStream
@@ -17,45 +19,105 @@ namespace EasyWaterfallStream
 
         }
 
-
-
-
-
-
-        public static double GetContentHeight(DependencyObject obj)
+        public double GlobalVerticalOffset
         {
-            return (double)obj.GetValue(ContentHeightProperty);
+            get { return (double)GetValue(GlobalVerticalOffsetProperty); }
+            set { SetValue(GlobalVerticalOffsetProperty, value); }
         }
 
-        public static void SetContentHeight(DependencyObject obj, double value)
-        {
-            obj.SetValue(ContentHeightProperty, value);
-        }
-
-        public static readonly DependencyProperty ContentHeightProperty =
-            DependencyProperty.RegisterAttached(nameof(SetContentHeight).Remove(0, 3), typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d,
-                (o, e)=>
+        // Using a DependencyProperty as the backing store for GlobalVerticalOffset.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty GlobalVerticalOffsetProperty =
+            DependencyProperty.Register(nameof(GlobalVerticalOffset), typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d,
+                (o, e) =>
                 {
-                    var ctxDO = (o as FrameworkElement)?.DataContext as DependencyCollectionViewGroup ;
-                    if (ctxDO!=null)
+                    var cm = o as ContentHeightGroupingManager;
+                    var items = cm.CollectionView.CollectionGroups.OfType<DependencyCollectionViewGroup>();
+                    foreach (var item in items)
                     {
-                        ctxDO.SetValue(ContentHeightProperty,e.NewValue);
+                        var sv = GetBindedScrollViewer(item);
+                        var nv = (double)e.NewValue;
+                        if (sv.VerticalOffset!=nv)
+                        {
+                            sv.ScrollToVerticalOffset(nv);
+                        }
+                    }
+
+                }
+
+                ));
+
+
+
+
+        public static ScrollViewer GetBindedScrollViewer(DependencyObject obj)
+        {
+            return (ScrollViewer)obj.GetValue(BindedScrollViewerProperty);
+        }
+
+        public static void SetBindedScrollViewer(DependencyObject obj, ScrollViewer value)
+        {
+            obj.SetValue(BindedScrollViewerProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for BindedScrollViewer.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BindedScrollViewerProperty =
+            DependencyProperty.RegisterAttached(nameof(SetBindedScrollViewer).Remove(0, 3), typeof(ScrollViewer), typeof(ContentHeightGroupingManager), new PropertyMetadata(
+                null,
+                (o, e) =>
+                {
+                    var fe = (o as FrameworkElement);
+                    if (fe!=null)
+                    {
+
+                        fe.Loaded += (ob, ev) =>
+                        {
+                            var ctxDO = fe.DataContext as DependencyCollectionViewGroup;
+                            if (ctxDO != null)
+                            {
+                                var sv = e.NewValue as ScrollViewer;
+                                SetBindedScrollViewer(ctxDO, sv);
+                                var cm = ctxDO.ParentView.GroupingManager as ContentHeightGroupingManager;
+
+                                var binding = new Binding()
+                                {
+                                    Source = sv,
+                                    Path = new PropertyPath(nameof(ScrollViewer.VerticalOffset)),
+                                };
+
+                                BindingOperations.SetBinding(sv, VerticalOffsetProperty, binding);
+
+                            }
+
+                        };
                     }
                 }
                 ));
 
 
-        public static double GetContentWidth(DependencyObject obj)
+        public static double GetVerticalOffset(DependencyObject obj)
         {
-            return (double)obj.GetValue(ContentWidthProperty);
+            return (double)obj.GetValue(VerticalOffsetProperty);
         }
 
-        public static void SetContentWidth(DependencyObject obj, double value)
+        public static void SetVerticalOffset(DependencyObject obj, double value)
         {
-            obj.SetValue(ContentWidthProperty, value);
+            obj.SetValue(VerticalOffsetProperty, value);
         }
-        public static readonly DependencyProperty ContentWidthProperty =
-            DependencyProperty.RegisterAttached(nameof(SetContentWidth).Remove(0, 3), typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d));
+
+        // Using a DependencyProperty as the backing store for VerticalOffset.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty VerticalOffsetProperty =
+            DependencyProperty.RegisterAttached("VerticalOffset", typeof(double), typeof(ContentHeightGroupingManager), new PropertyMetadata(0d,
+            (o, e) =>
+            {
+                var sv = o as ScrollViewer;
+                var ctxDO = (o as FrameworkElement)?.DataContext as DependencyCollectionViewGroup;
+                if (ctxDO != null)
+                {
+                    var cm = ctxDO.ParentView.GroupingManager as ContentHeightGroupingManager;
+                    cm.GlobalVerticalOffset = sv.VerticalOffset;
+                }
+            }));
+
 
 
 
@@ -63,13 +125,17 @@ namespace EasyWaterfallStream
         {
             var min = CollectionView.CollectionGroups
                  .OfType<DependencyCollectionViewGroup>()
-                 .Select(x => new { x, h = (double)x.GetValue(ContentHeightProperty), count = x.GroupItems.Count })
+                 .Select(x => new { x, h = GetBindedScrollViewer(x)?.ScrollableHeight ?? 0, count = x.GroupItems.Count })
                    .OrderBy(x => x.h).ThenBy(x => x.count)
                  .FirstOrDefault();
 
             min.x.GroupItems.Add(item);
             return true;
         }
+
+
+
+
 
         protected override bool OnRemovingingItemFromGroup(object item)
         {

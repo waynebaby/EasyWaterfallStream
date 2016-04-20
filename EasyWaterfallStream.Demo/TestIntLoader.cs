@@ -19,6 +19,7 @@ namespace EasyWaterfallStream.Demo
                    true,
                   async (v, l, c) =>
                    {
+                       c = 5;
                        var til = l as TestIntLoader;
                        for (int i = 0; i < c; i++)
                        {
