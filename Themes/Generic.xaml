@@ -41,7 +41,7 @@
                         <!--local:ContentHeightGroupingManager.ContentHeight="{Binding RelativeSource={RelativeSource Mode=Self} ,Path=ScrollableHeight  ,Mode=TwoWay}"
                             local:ContentHeightGroupingManager.ContentWidth="{Binding RelativeSource={RelativeSource Mode=Self} ,Path=ScrollableWidth,Mode=TwoWay}"-->
                         <ScrollViewer 
-                            local:ContentHeightGroupingManager.BindedScrollViewer="{Binding RelativeSource={RelativeSource Mode=Self}}"
+                            local:ContentHeightGroupingManager.BindedDataContext="{Binding}"
                              x:Name="ScrollViewer" AutomationProperties.AccessibilityView="Raw" BringIntoViewOnFocusChange="{TemplateBinding ScrollViewer.BringIntoViewOnFocusChange}" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsHorizontalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsHorizontalScrollChainingEnabled}" IsVerticalScrollChainingEnabled="{TemplateBinding ScrollViewer.IsVerticalScrollChainingEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" TabNavigation="{TemplateBinding TabNavigation}" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="{TemplateBinding ScrollViewer.ZoomMode}">
                             <ItemsPresenter FooterTransitions="{TemplateBinding FooterTransitions}" FooterTemplate="{TemplateBinding FooterTemplate}" Footer="{TemplateBinding Footer}" HeaderTemplate="{TemplateBinding HeaderTemplate}" Header="{TemplateBinding Header}" HeaderTransitions="{TemplateBinding HeaderTransitions}" Padding="{TemplateBinding Padding}"/>
                         </ScrollViewer>
@@ -69,11 +69,11 @@
                         ItemsSource="{Binding GroupItems}" Style="{StaticResource WaterLineListView}"                            
                         >
                             <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Background="green" BorderThickness="1" Height="{Binding Converter={StaticResource HeightConverter}}">
-                                            <TextBlock Text="{Binding}"></TextBlock>
-                                        </Grid>
-                                    </DataTemplate>
+                                <DataTemplate>
+                                    <Grid Background="green" BorderThickness="1" Height="{Binding Converter={StaticResource HeightConverter}}">
+                                        <TextBlock Text="{Binding}"></TextBlock>
+                                    </Grid>
+                                </DataTemplate>
                             </ListView.ItemTemplate>
                             <ListView.ItemsPanel>
                                 <ItemsPanelTemplate>

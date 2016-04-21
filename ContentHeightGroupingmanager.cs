@@ -35,11 +35,15 @@ namespace EasyWaterfallStream
                     foreach (var item in items)
                     {
                         var sv = GetBindedScrollViewer(item);
-                        var nv = (double)e.NewValue;
-                        if (sv.VerticalOffset!=nv)
+                        if (sv != null)
                         {
-                            sv.ScrollToVerticalOffset(nv);
+                            var nv = (double)e.NewValue;
+                            if (sv.VerticalOffset != nv)
+                            {
+                                sv.ScrollToVerticalOffset(nv);
+                            }
                         }
+
                     }
 
                 }
@@ -54,6 +58,8 @@ namespace EasyWaterfallStream
             return (ScrollViewer)obj.GetValue(BindedScrollViewerProperty);
         }
 
+
+
         public static void SetBindedScrollViewer(DependencyObject obj, ScrollViewer value)
         {
             obj.SetValue(BindedScrollViewerProperty, value);
@@ -65,33 +71,53 @@ namespace EasyWaterfallStream
                 null,
                 (o, e) =>
                 {
-                    var fe = (o as FrameworkElement);
-                    if (fe!=null)
-                    {
 
-                        fe.Loaded += (ob, ev) =>
-                        {
-                            var ctxDO = fe.DataContext as DependencyCollectionViewGroup;
-                            if (ctxDO != null)
-                            {
-                                var sv = e.NewValue as ScrollViewer;
-                                SetBindedScrollViewer(ctxDO, sv);
-                                var cm = ctxDO.ParentView.GroupingManager as ContentHeightGroupingManager;
-
-                                var binding = new Binding()
-                                {
-                                    Source = sv,
-                                    Path = new PropertyPath(nameof(ScrollViewer.VerticalOffset)),
-                                };
-
-                                BindingOperations.SetBinding(sv, VerticalOffsetProperty, binding);
-
-                            }
-
-                        };
-                    }
                 }
                 ));
+
+
+        public static DependencyCollectionViewGroup GetBindedDataContext(DependencyObject obj)
+        {
+            return (DependencyCollectionViewGroup)obj.GetValue(BindedDataContextProperty);
+        }
+
+        public static void SetBindedDataContext(DependencyObject obj, DependencyCollectionViewGroup value)
+        {
+            obj.SetValue(BindedDataContextProperty, value);
+        }
+
+        // Using a DependencyProperty as the backing store for BindedDataContext.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty BindedDataContextProperty =
+            DependencyProperty.RegisterAttached(nameof(SetBindedDataContext).Remove(0, 3), typeof(DependencyCollectionViewGroup), typeof(ContentHeightGroupingManager), new PropertyMetadata(null,
+                (o, e) =>
+                {
+                    var sv = o as ScrollViewer;
+                    if (sv != null)
+                    {
+
+
+
+                        var ctxDO = e.NewValue as DependencyCollectionViewGroup;
+                        if (ctxDO != null)
+                        {
+                            SetBindedScrollViewer(ctxDO, sv);
+                            var cm = ctxDO.ParentView.GroupingManager as ContentHeightGroupingManager;
+                            var binding = new Binding()
+                            {
+                                Source = sv,
+                                Path = new PropertyPath(nameof(ScrollViewer.VerticalOffset)),
+                            };
+
+                            BindingOperations.SetBinding(sv, VerticalOffsetProperty, binding);
+
+                        }
+
+                    };
+
+
+                }));
+
+
 
 
         public static double GetVerticalOffset(DependencyObject obj)
@@ -128,7 +154,10 @@ namespace EasyWaterfallStream
                  .Select(x => new { x, h = GetBindedScrollViewer(x)?.ScrollableHeight ?? 0, count = x.GroupItems.Count })
                    .OrderBy(x => x.h).ThenBy(x => x.count)
                  .FirstOrDefault();
-
+            if (min == null)
+            {
+                return false;
+            }
             min.x.GroupItems.Add(item);
             return true;
         }

@@ -107,21 +107,11 @@
     <None Include="project.json" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\MVVM-Sidekick\MVVMSidekick\MVVMSidekick.Shared\Collections\DependencyCollectionView.cs">
-      <Link>CollectionView\DependencyCollectionView.cs</Link>
-    </Compile>
-    <Compile Include="..\MVVM-Sidekick\MVVMSidekick\MVVMSidekick.Shared\Collections\DependencyCollectionViewGroup.cs">
-      <Link>CollectionView\DependencyCollectionViewGroup.cs</Link>
-    </Compile>
-    <Compile Include="..\MVVM-Sidekick\MVVMSidekick\MVVMSidekick.Shared\Collections\DependencyCollectionViewGroupingManager.cs">
-      <Link>CollectionView\DependencyCollectionViewGroupingManager.cs</Link>
-    </Compile>
-    <Compile Include="..\MVVM-Sidekick\MVVMSidekick\MVVMSidekick.Shared\Collections\DependencyCollectionViewIncrementalLoader.cs">
-      <Link>CollectionView\DependencyCollectionViewIncrementalLoader.cs</Link>
-    </Compile>
-    <Compile Include="..\MVVM-Sidekick\MVVMSidekick\MVVMSidekick.Shared\Collections\DependencyObservableVector.cs">
-      <Link>CollectionView\DependencyObservableVector.cs</Link>
-    </Compile>
+    <Compile Include="CollectionView\DependencyCollectionView.cs" />
+    <Compile Include="CollectionView\DependencyCollectionViewGroup.cs" />
+    <Compile Include="CollectionView\DependencyCollectionViewGroupingManager.cs" />
+    <Compile Include="CollectionView\DependencyCollectionViewIncrementalLoader.cs" />
+    <Compile Include="CollectionView\DependencyObservableVector.cs" />
     <Compile Include="ContentHeightGroupingManager.cs" />
     <Compile Include="HeightConverter.cs" />
     <Compile Include="OrientationFlipConverter.cs" />

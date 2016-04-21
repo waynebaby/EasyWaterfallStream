@@ -31,8 +31,33 @@ namespace EasyWaterfallStream
 
             BindingOperations.SetBinding(CollectionView, DependencyCollectionView.IncrementalLoaderProperty, b);
 
-            this.Loaded += (o, e) => { CollectionView.GroupingManager.GroupCount = 5; };
+            this.Loaded += (o, e) =>
+            {
+
+
+                var b2 = new Binding()
+                {
+                    Source = this,
+                    Path = new PropertyPath(nameof(CollectionView.GroupingManager.GroupCount)),
+                };
+                BindingOperations.SetBinding(CollectionView.GroupingManager, DependencyCollectionViewGroupingManagerBase.GroupCountProperty, b2);
+
+
+                //CollectionView.GroupingManager.GroupCount = GroupCount;
+            };
         }
+
+        public int GroupCount
+        {
+            get { return (int)GetValue(GroupCountProperty); }
+            set { SetValue(GroupCountProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for GroupCount.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty GroupCountProperty =
+            DependencyProperty.Register("GroupCount", typeof(int), typeof(WaterfallStreamViewer), new PropertyMetadata(0));
+
+
 
         public DataTemplate WaterLineDataTemplate
         {
@@ -44,7 +69,7 @@ namespace EasyWaterfallStream
             DependencyProperty.Register(nameof(WaterLineDataTemplate), typeof(DataTemplate), typeof(WaterfallStreamViewer), new PropertyMetadata(null));
 
 
-       
+
 
 
 

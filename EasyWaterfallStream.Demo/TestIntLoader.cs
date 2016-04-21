@@ -19,7 +19,8 @@ namespace EasyWaterfallStream.Demo
                    true,
                   async (v, l, c) =>
                    {
-                       c = 5;
+                       await Task.Delay(300);
+                       c = 30;
                        var til = l as TestIntLoader;
                        for (int i = 0; i < c; i++)
                        {

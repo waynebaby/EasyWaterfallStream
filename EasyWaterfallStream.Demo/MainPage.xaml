@@ -9,12 +9,16 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="90*"/>
+        </Grid.RowDefinitions>
+        <Slider x:Name="slider" Maximum="10" Grid.Row="0" Value="3"/>
+        <EasyWaterfallStream:WaterfallStreamViewer  Name="EasyWaterfallStream" BorderBrush="black" BorderThickness="2" Background="Gray"  GroupCount="{Binding Value, ElementName=slider}"  Grid.Row="1">
 
-        <EasyWaterfallStream:WaterfallStreamViewer  Name="EasyWaterfallStream" BorderBrush="black" BorderThickness="2" Background="Gray" >
-         
             <EasyWaterfallStream:WaterfallStreamViewer.Loader>
                 <local:TestIntLoader/>
-            </EasyWaterfallStream:WaterfallStreamViewer.Loader>            
+            </EasyWaterfallStream:WaterfallStreamViewer.Loader>
         </EasyWaterfallStream:WaterfallStreamViewer>
         <!--<ListView Background="Gray" xmlns:cv="using:MVVMSidekick.Collections" >
             <ListView.ItemsSource>
